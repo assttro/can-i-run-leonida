@@ -1,4 +1,4 @@
-import { assessHardware, graphicsMemory } from "./model.mjs?v=4";
+import { assessHardware, graphicsMemory } from "./model.mjs?v=5";
 
 const form = document.getElementById("settings");
 const verdict = document.getElementById("verdict");
@@ -43,7 +43,7 @@ const references = {
   low: {
     label: "Community estimate for 1080p Low",
     CPU: "i5‑12400F or Ryzen 5 5600",
-    GPU: "RTX 3060 12 GB or RX 6700 XT",
+    GPU: "RTX 3060 8 GB, RX 6600 or Arc A750 (ray tracing)",
     RAM: "16 GB",
   },
 };
@@ -106,8 +106,8 @@ function update(fromSlider = false) {
     row.textContent = statusLabel[status];
   }
   const vram = graphicsMemory(graphics);
-  vramNote.hidden = consoleComparison || !vram || Number(vram) >= 12;
-  const note = vramNote.hidden ? "" : `VRAM: ${vram} GB selected, 12 GB on both reference cards.`;
+  vramNote.hidden = consoleComparison || !vram || Number(vram) >= 8;
+  const note = vramNote.hidden ? "" : `VRAM: ${vram} GB selected, 8 GB on the reference card.`;
   if (vramNote.textContent !== note) vramNote.textContent = note;
 
 }

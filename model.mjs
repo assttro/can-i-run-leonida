@@ -1,22 +1,27 @@
-// Gaming benchmark bands relative to the i5-12400F and Ryzen 5 5600.
-// Sources: Tom's Hardware's Ryzen 5 5600 review, current and legacy CPU
-// hierarchies, and TechSpot's 11400F, 12400F and Ryzen 5 5600 testing.
+// Gaming benchmark bands relative to the i5-12400F and Ryzen 5 5600 floor.
+// Intel keys drop K/KF/KS/F suffixes. Sources: Tom's Hardware's Ryzen 5 5600
+// review, CPU hierarchies, and TechSpot's 11400F, 12400F and 5600 testing.
 const cpuBands = {
   above: [
-    "285k", "265k", "245k", "14900k", "14700k", "14600k", "14400",
-    "13900k", "13700k", "13600k", "12900k", "12700k", "12600k",
-    "9850x3d", "9950x3d", "9800x3d", "9700x", "9600x", "7950x3d", "7800x3d",
-    "7700", "7700x", "7600x3d", "7600", "7600x", "5800x3d",
+    "285", "265", "245", "235", "225", "14900", "14700", "14600", "14500", "14400",
+    "13900", "13700", "13600", "12900", "12700", "12600",
+    "9950x3d", "9950x", "9900x3d", "9900x", "9850x3d", "9800x3d", "9700x", "9600x", "9600",
+    "7950x3d", "7950x", "7900x3d", "7900x", "7900", "7800x3d", "7700", "7700x",
+    "7600x3d", "7600", "7600x", "7500f", "5800x3d", "5700x3d", "5600x3d", "5950x", "5900x",
   ],
-  near: ["12400", "13400", "11700k", "11600k", "5700x", "5800x", "5600", "5600x"],
+  near: [
+    "12400", "12500", "13400", "13500", "11900", "11700", "11600",
+    "5800x", "5700x", "5600", "5600x", "8700g", "8600g",
+  ],
   below: [
-    "13100", "12100", "11400", "10700k", "10600k", "10400", "10100",
-    "9900k", "9700k", "8700k", "5600g", "5500", "3700x", "3600", "3600x", "2600x",
+    "14100", "13100", "12100", "11400", "10900", "10700", "10600", "10400", "10100",
+    "9900", "9700", "8700", "5600g", "5500", "3950x", "3900x", "3800x", "3700x",
+    "3600", "3600x", "2700x", "2600", "2600x", "1600",
   ],
 };
 
-// Bands use Tom's Hardware desktop rasterization tests. The reference range
-// spans the RTX 3060 12 GB and RX 6700 XT, with room for small differences.
+// Bands use Tom's Hardware desktop rasterization tests. The floor is the
+// RTX 3060 8 GB or a ray tracing capable AMD/Intel equivalent.
 const gpuBands = {
   above: [
     "rtx 5090", "rtx 5080", "rtx 5070 ti", "rtx 5070", "rtx 5060 ti 16gb",
@@ -29,21 +34,23 @@ const gpuBands = {
     "rx 7600 xt", "rx 6950 xt", "rx 6900 xt", "rx 6800 xt", "rx 6800",
   ],
   near: [
-    "rtx 5050", "rtx 4060", "rtx 3060 ti", "rtx 3060 12gb", "rtx 2080 ti",
+    "rtx 5050", "rtx 4060", "rtx 3060 ti", "rtx 3060 12gb", "rtx 3060 8gb", "rtx 3060",
+    "rtx 2080 ti", "rtx 2060 super", "rx 6600", "arc a770 8gb", "arc a770",
     "rtx 2080 super", "rtx 2070 super", "rtx 2070", "rx 7600", "rx 6750 xt",
     "rx 6700 xt", "rx 6700", "rx 6650 xt", "rx 6600 xt", "arc b580", "arc b570",
     "arc a770 16gb", "arc a750",
   ],
-  below: ["gtx 1650 super", "gtx 1660", "rx 5500 xt", "rtx 3060 8gb", "rtx 3050 8gb", "rtx 3050 6gb", "rtx 2060 super", "rtx 2060", "rx 6600", "rx 6500 xt"],
+  below: ["gtx 1650 super", "gtx 1660", "rx 5500 xt", "rtx 3050 8gb", "rtx 3050 6gb", "rtx 3050", "rtx 2060", "rx 6500 xt"],
 };
 
 // Approximate desktop gaming bands around the community's Series X examples.
 // A CPU or GPU band describes benchmark proximity, not a Leonida requirement.
+const seriesXCpuNear = ["3700x", "3800x", "3900x", "3950x", "5600", "11400", "11700", "11600",
+  "10900", "10700", "10600", "9900", "9700", "14100", "13100", "12100", "5600g", "5500"];
 const seriesXCpuBands = {
-  above: [...cpuBands.above, "12400", "13400", "5700x", "5800x", "5600x"],
-  near: ["3700x", "5600", "11400", "11700k", "11600k", "10700k", "10600k",
-    "9900k", "9700k", "13100", "12100", "5600g", "5500"],
-  below: ["10400", "10100", "3600", "3600x", "2600x", "8700k"],
+  above: [...cpuBands.above, ...cpuBands.near].filter(model => !seriesXCpuNear.includes(model)),
+  near: seriesXCpuNear,
+  below: ["10400", "10100", "3600", "3600x", "2700x", "2600", "2600x", "1600", "8700"],
 };
 const seriesXGpuBands = {
   above: gpuBands.above.filter(model => ![
@@ -55,15 +62,17 @@ const seriesXGpuBands = {
     "rtx 5060 ti 16gb", "rtx 5060 ti 8gb", "rtx 5060", "rtx 4060 ti 16gb",
     "rtx 4060 ti 8gb", "rtx 3070 ti", "rtx 3070", "rtx 3060 ti", "rtx 2080 ti",
     "rx 9060 xt 16gb", "rx 9060 xt 8gb", "rx 7600 xt", "rx 6800", "rx 6750 xt", "rx 6700 xt",
+    "rtx 4060", "rtx 2080 super", "rx 6700", "arc b580",
   ],
-  below: [...gpuBands.below, "rtx 5050", "rtx 3060 12gb", "rtx 2070 super", "rtx 2070",
-    "rx 7600", "rx 6650 xt", "rx 6600 xt", "arc b570", "arc a750"],
+  below: [...gpuBands.below, "rtx 5050", "rtx 3060 12gb", "rtx 3060 8gb", "rtx 3060", "rtx 2070 super",
+    "rtx 2070", "rtx 2060 super", "rx 7600", "rx 6650 xt", "rx 6600 xt", "rx 6600", "arc b570",
+    "arc a770 16gb", "arc a770 8gb", "arc a770", "arc a750"],
 };
 
 // Additional ranges follow the community examples, with broad desktop bands.
 const ps5GpuBands = {
   above: seriesXGpuBands.above,
-  near: [...seriesXGpuBands.near, "rtx 2070 super", "rtx 2080 super", "rtx 3060 12gb", "rx 6700"],
+  near: [...seriesXGpuBands.near, "rtx 2070 super", "rtx 3060 12gb"],
   below: seriesXGpuBands.below.filter(model => !["rtx 2070 super", "rtx 3060 12gb"].includes(model)),
 };
 const proCpuBands = {
@@ -82,8 +91,8 @@ const proGpuBands = {
 };
 const seriesSCpuBands = {
   above: [...new Set([...seriesXCpuBands.above, ...seriesXCpuBands.near])],
-  near: ["3600", "3600x", "10400", "8700k"],
-  below: ["10100", "2600x", "1600"],
+  near: ["3600", "3600x", "2700x", "10400", "8700"],
+  below: ["10100", "2600", "2600x", "1600"],
 };
 const seriesSGpuBands = {
   above: [...gpuBands.above, ...gpuBands.near, ...gpuBands.below].filter(model => !["gtx 1650 super", "gtx 1660", "rx 5500 xt"].includes(model)),
@@ -143,10 +152,11 @@ export function graphicsMemory(graphics) {
 }
 
 function cpuKey(processor) {
-  if (/\b(?:ryzen|core\s+ultra)\b/i.test(processor)) {
+  if (/\bryzen\b/i.test(processor)) {
     return processor.match(/\b\d{3,5}[a-z\d]*\b/i)?.[0].toLowerCase();
   }
-  return processor.match(/\bi[3579][\s-]*(\d{4,5}[a-z]*)\b/i)?.[1].toLowerCase().replace(/f$/, "");
+  // K/KF/KS/F share a band; laptop suffixes (H, U, ...) stay unknown
+  return processor.match(/\b(?:i[3579]|ultra\s+[579])[\s-]*(\d{3,5})(?:k[fs]?|f)?\b/i)?.[1];
 }
 
 function gpuModel(graphics) {
